@@ -14,38 +14,16 @@ var Visitor = mongoose.model("Visitor", schema);
 
 app.get('/', (req, res) => {
 
-    if(req.query.name!=null && req.query.name!=''){
+    if(req.query.name){
         Visitor.findOne({'name':req.query.name}, function(err, visitorUpdate) {
             if(visitorUpdate){
                 visitorUpdate.count += 1;
-                visitorUpdate.save((err, updatedUser)=> {
-                    if(err){
-                        res.status(500).send({ message: "Error en el servidor" });
-                    }
-                    else{
-                        if(!updatedUser){
-                            res.send(`<script>alert('No fue posible actualizar');</script>`);
-                        }
-                        else{
-                            res.send(`<script>alert('Visitante actualizado');</script>`);
-                        }
-                    }
-                });
+                visitorUpdate.save();
+                res.send(`<script>alert('Usuario actualizado');</script>`);
             }else{
                 var visitor = new Visitor({ name: req.query.name, count:1 });
-                visitor.save((err, newUser)=> {
-                    if(err){
-                        res.status(500).send({ message: "Error en el servidor" });
-                    }
-                    else{
-                        if(!newUser){
-                            res.send(`<script>alert('No fue posible registrar usuario');</script>`);
-                        }
-                        else{
-                            res.send(`<script>alert('${newUser.name} registrado!');</script>`);
-                        }
-                    }
-                });
+                visitor.save();
+                res.send(`<script>alert('Usuario registrado');</script>`);
             }
         });
     }
