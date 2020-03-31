@@ -29,48 +29,29 @@ app.get('/', (req, res) => {
     }
     else{
         var visitor = new Visitor({ name: 'Anónimo', count:1 });
-        visitor.save((err, newUser)=> {
+        visitor.save();
+        Visitor.find({},(err,visitors)=>{
             if(err){
                 res.status(500).send({ message: "Error en el servidor" });
             }
             else{
-                if(!newUser){
-
-                }
-                else{
-                    Visitor.find({},(err,visitors)=>{
-                        if(err){
-                            res.status(500).send({ message: "Error en el servidor" });
-                        }
-                        else{
-                            if(!visitors){
-                                res.send(`<script>alert('No fue posible leer usuarios');</script>`);
-                            }
-                            else{
-                                var html=`<table>
-                                <thead><tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Visits</th>
-                                </tr></thead>`;
-                                visitors.forEach(visitor => {
-                                    html+=`
-                                    <tr>
-                                        <td>${visitor._id}</td>
-                                        <td>${visitor.name}</td>
-                                        <td>${visitor.count}</td>
-                                    </tr>`;
-                                });
-                                html+=`</body></table>`;
-                                res.send(html);
-                            }
-                        }
-    
-                    });
-                }
-                
+                var html=`<table>
+                <thead><tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Visits</th>
+                </tr></thead>`;
+                visitors.forEach(visitor => {
+                    html+=`
+                    <tr>
+                        <td>${visitor._id}</td>
+                        <td>${visitor.name}</td>
+                        <td>${visitor.count}</td>
+                    </tr>`;
+                });
+                html+=`</body></table>`;
+                res.send(html);
             }
-            
         });
     }
 });
