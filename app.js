@@ -18,12 +18,72 @@ app.get('/', (req, res) => {
         Visitor.findOne({'name':req.query.name}, function(err, visitorUpdate) {
             if(visitorUpdate){
                 visitorUpdate.count += 1;
-                visitorUpdate.save();
-                res.send("Usuario actualizado");
+                visitorUpdate.save(function(err, newVisitor){
+                    if(err){
+                        res.send("Error en el servidor"); 
+                    }
+                    else{
+                        if(!newVisitor){
+                            res.send("Usuario NO registrado"); 
+                        }
+                        else{
+                            Visitor.find({},(err,visitors)=>{
+                                if(visitors){
+                                    var html=`<table>
+                                    <thead><tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Visits</th>
+                                    </tr></thead>`;
+                                    visitors.forEach(visitor => {
+                                        html+=`
+                                        <tr>
+                                            <td>${visitor._id}</td>
+                                            <td>${visitor.name}</td>
+                                            <td>${visitor.count}</td>
+                                        </tr>`;
+                                    });
+                                    html+=`</body></table>`;
+                                    res.send(html);
+                                }
+                            });
+                        }
+                    }
+                });
             }else{
                 var visitor = new Visitor({ name: req.query.name, count:1 });
-                visitor.save();
-                res.send("Usuario registrado");
+                visitor.save(function(err, newVisitor){
+                    if(err){
+                        res.send("Error en el servidor"); 
+                    }
+                    else{
+                        if(!newVisitor){
+                            res.send("Usuario NO registrado"); 
+                        }
+                        else{
+                            Visitor.find({},(err,visitors)=>{
+                                if(visitors){
+                                    var html=`<table>
+                                    <thead><tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Visits</th>
+                                    </tr></thead>`;
+                                    visitors.forEach(visitor => {
+                                        html+=`
+                                        <tr>
+                                            <td>${visitor._id}</td>
+                                            <td>${visitor.name}</td>
+                                            <td>${visitor.count}</td>
+                                        </tr>`;
+                                    });
+                                    html+=`</body></table>`;
+                                    res.send(html);
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     }
