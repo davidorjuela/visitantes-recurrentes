@@ -19,39 +19,35 @@ app.get('/', (req, res) => {
             if(visitorUpdate){
                 visitorUpdate.count += 1;
                 visitorUpdate.save();
-                res.send(`<script>alert('Usuario actualizado');</script>`);
             }else{
                 var visitor = new Visitor({ name: req.query.name, count:1 });
                 visitor.save();
-                res.send(`<script>alert('Usuario registrado');</script>`);
             }
         });
     }
     else{
         var visitor = new Visitor({ name: 'Anónimo', count:1 });
-        visitor.save();
-        Visitor.find({},(err,visitors)=>{
-            if(err){
-                res.status(500).send({ message: "Error en el servidor" });
-            }
-            else{
-                var html=`<table>
-                <thead><tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Visits</th>
-                </tr></thead>`;
-                visitors.forEach(visitor => {
-                    html+=`
-                    <tr>
-                        <td>${visitor._id}</td>
-                        <td>${visitor.name}</td>
-                        <td>${visitor.count}</td>
-                    </tr>`;
-                });
-                html+=`</body></table>`;
-                res.send(html);
-            }
+        visitor.save(function(err){
+            Visitor.find({},(err,visitors)=>{
+                if(visitors){
+                    var html=`<table>
+                    <thead><tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Visits</th>
+                    </tr></thead>`;
+                    visitors.forEach(visitor => {
+                        html+=`
+                        <tr>
+                            <td>${visitor._id}</td>
+                            <td>${visitor.name}</td>
+                            <td>${visitor.count}</td>
+                        </tr>`;
+                    });
+                    html+=`</body></table>`;
+                    res.send(html);
+                }
+            });
         });
     }
 });
