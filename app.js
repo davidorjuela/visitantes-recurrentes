@@ -19,9 +19,11 @@ app.get('/', (req, res) => {
             if(visitorUpdate){
                 visitorUpdate.count += 1;
                 visitorUpdate.save();
+                res.send('<script>alert("Visitante actualizado")</script>');
             }else{
                 var visitor = new Visitor({ name: req.query.name, count:1 });
                 visitor.save();
+                res.send('<script>alert("Visitante registrado")</script>');
             }
         });
     }
