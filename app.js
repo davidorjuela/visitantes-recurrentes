@@ -29,8 +29,18 @@ app.get('/', (req, res) => {
     }
     else{
         var visitor = new Visitor({ name: 'Anónimo', count:1 });
-        visitor.save(function(err){
-            res.send('<script>alert("Anónimo registrado")</script>'); 
+        visitor.save(function(err, newVisitor){
+            if(err){
+                res.send('<script>alert("Error en el servidor")</script>'); 
+            }
+            else{
+                if(!newVisitor){
+                    res.send('<script>alert("NO se pudo registrar")</script>'); 
+                }
+                else{
+                    res.send('<script>alert("Anónimo registrado")</script>'); 
+                }
+            }
         });
     }
 
