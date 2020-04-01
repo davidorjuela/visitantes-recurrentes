@@ -19,11 +19,11 @@ app.get('/', (req, res) => {
             if(visitorUpdate){
                 visitorUpdate.count += 1;
                 visitorUpdate.save();
-                res.send('<script>alert("Visitante actualizado")</script>');
+                vista();
             }else{
                 var visitor = new Visitor({ name: req.query.name, count:1 });
                 visitor.save();
-                res.send('<script>alert("Visitante registrado")</script>');
+                vista();
             }
         });
     }
@@ -31,14 +31,14 @@ app.get('/', (req, res) => {
         var visitor = new Visitor({ name: 'Anónimo', count:1 });
         visitor.save(function(err, newVisitor){
             if(err){
-                res.send('<script>alert("Error en el servidor")</script>'); 
+                vista(); 
             }
             else{
                 if(!newVisitor){
-                    res.send('<script>alert("NO se pudo registrar")</script>'); 
+                    vista(); 
                 }
                 else{
-                    res.send('<script>alert("Anónimo registrado")</script>'); 
+                    vista(); 
                 }
             }
         });
